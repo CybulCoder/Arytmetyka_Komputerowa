@@ -44,6 +44,6 @@
 
 ## 📊 Analiza Wyników
 
-    🔳 Wykresy i analiza danych > Wykorzystanie bibliotek Python.
+    🔳 Wykresy i analiza danych > Wykorzystanie bibliotek Python (scipy, numpy, matplotlib, seaborn, pandas)
 
     🔳 Wnioski końcowe > Podsumowanie efektywności algorytmu w praktyce.
