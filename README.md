@@ -14,9 +14,11 @@
 
 ## 🧱 Szkielet Implementacji
 
-    🟨 Fork szkieletu implementacji > znalezienie dostępnego rozwiązania i wykorzystanie go zgodnie z licencją
+    🔳 Wygenerowanie kodu z użyciem AI > Wykorzystanie modelu językowego Gemini 3.
 
-    🔳 Edycja kodu > usunięcie zbędnego kodu, zmodyfikowanie pod własne potrzeby
+    🔳 Dokumentacja promptów > Stworzenie i zpisanie dokładnych promptów dla Gemini 3. 
+
+    🔳 Ręczne poprawki kodu > Tam gdzie niezbędna jest interwencja człowieka.
 
 ## ➕ Implementacja dodawnia BigInt
 
