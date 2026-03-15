@@ -16,16 +16,16 @@ void vector_to_mpz(mpz_t result, const std::vector<uint32_t>& vec){
     }
 
 
-
-
 ////////////////////////////////////////
 //
 // MAIN
 //
 /////////////////////////////////////////
 
+size_t SIZE = 600; // Number of words (32-bit)
+
 int main() {
-    std::ifstream file("data_500.txt");
+    std::ifstream file("data_" + std::to_string(SIZE) + ".txt");
     if (!file) {
         std::cout << "Error opening file!" << std::endl;
         return 1;
@@ -67,9 +67,9 @@ int main() {
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        
+
         std::cout << "mpz_mul execution time: " << duration.count() << " microseconds" << std::endl;
-        csv_file << "500," << duration.count() << std::endl;
+        csv_file << SIZE << "," << duration.count() << std::endl;
 
         // Print the results
         /*
