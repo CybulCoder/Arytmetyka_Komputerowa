@@ -31,7 +31,7 @@ int main() {
         return 1;
     }
 
-    std::ofstream csv_file("results.csv", std::ios::app);
+    std::ofstream csv_file("resultsGMP.csv", std::ios::app);
     if (!csv_file) {
         std::cout << "Error opening CSV file!" << std::endl;
         return 1;
