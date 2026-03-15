@@ -2,50 +2,89 @@
 
 # UWAGA: Projekt w trakcie realizacji! 🚧 🏗️ 🚧
 
-## 🎯 Początkowe Cele
+### 📂 `Dane_wygenerowane`
 
-    ✅ Sformułowanie tematu > Definicja celu głównego oraz zakresu projektu.
+Opis:
 
-    ✅ Metodologia badania > Opracowanie procedur testowych.
+> Folder zawiera dane wygenerowane przez data_gen.py
 
-    ✅ Plan prac > Planowanie etapów w celu terminowej realizacji.
+Możesz tu napisać:
 
-    🟨 Dokumentacja techniczna > Bieżący opis przebiegu prac i implementacji.
+* Pliki tekstowe: data_50.txt, data_100.txt, ..., data_950.txt, data_1000.txt
+* W każdej linii jedna liczba o bazie 2^32
+* Słowa maszynowe oddzielone znakiem spacji
+* Kolejność od ,,cyfry" najbardziej znaczącej, do najmniej
 
-## 🧱 Szkielet Implementacji
+---
 
-    🔳 Wygenerowanie kodu z użyciem AI > Wykorzystanie modelu językowego Gemini 3.
+### 📂 `Dokumentacja`
 
-    🔳 Dokumentacja promptów > Stworzenie i zpisanie dokładnych promptów dla Gemini 3. 
+Opis:
 
-    🔳 Ręczne poprawki kodu > Tam gdzie niezbędna jest interwencja człowieka.
+> Dokumentacja techniczna projektu, kod w .tex
 
-## ➕ Implementacja dodawnia BigInt
+Zawiera
+* Dokumentacja.pdf
+* main.tex -- kod główny
+* references.bib -- elementy bibliografii
+* Oraz zdjęcia wykorzystane
 
-    🔳 Algorytm dodawania > Niezbędna do poprawnego działania mnożenia.
+---
 
-    🔳 Testy poprawności > Weryfikacja wyników.
+### 📂 `Notki_z_spotkan`
 
-## ✖️ Algorytm Mnożenia
+Opis:
 
-    🔳 Implementacja Toom-3 > Wykorzystując wcześniejszy szkielet.
+> Notatki z spotkań z opiekunem projektu
 
-    🔳 Testy poprawności > Porównanie wyników z bibliotekami.
+---
 
-## 🧪 Eksperyment i Benchmarki
+## 📄 Pliki
 
-    🔳 Przygotowanie próbek > Z użyciem gotowej bilbioteki do generowania liczb pseudolosowych i zapis danych wejściowych według ustalonej metodologii.
+### 🐍 `data_gen.py`
 
-    🔳 Testy własnej implementacji > Pomiar czasu mnożenia próbek.
+Opis:
 
-    🔳 Testy rozwiązań GMP > Benchmark względem profesjonalnego standardu C++.
+> Skrypt generujący dane wejściowe do testów.
 
-    🔳 Testy rozwiązań wbudowanych w Pythonie > Pomiar czasu w Python
+* Nie przyjmuje, żadnych argumentów
+* Korzysta z modułu random
+* Generuje ,,cyfry" z rozkładem jednostajnym
+* Tworzy pliki tekstowe: data_50.txt ...
 
-    🔳 Zapisanie wyników > względem ustalonej metodologii (.csv)
+---
 
-## 📊 Analiza Wyników
+### 🐍 `main_PYTHON.py`
 
-    🔳 Wykresy i analiza danych 
+Opis:
 
-    🔳 Wnioski końcowe > Podsumowanie efektywności algorytmu w praktyce.
+> Mierzy czas wykonania mnożenia przez wbudowany typ Python'a
+
+* Należy zmienić zmienną SIZE, by wykonać test dla danej próbki
+* Zapisuje wyniki do pliku 📊**resultsPYTHON.csv** w formacie: SIZE, time
+* time jest podany w mikrosekundach
+
+---
+
+### ⚙️ `main_GMP.cpp`
+
+Opis:
+
+> Mierzy czas wykonania mnożenia przez bibliotekę GNU MP.
+
+
+* Należy zmienić zmienną SIZE, by wykonać test dla danej próbki
+* Zapisuje wyniki do pliku 📊**resultsGMP.csv** w formacie: SIZE, time
+* time jest podany w mikrosekundach
+
+
+Przykład kompilacji:
+```bash
+g++ main_GMP.cpp -o program -lgmp
+```
+
+---
+
+## 📜 License
+
+Opcjonalnie informacja o licencji.
