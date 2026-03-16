@@ -82,9 +82,3 @@ Przykład kompilacji:
 ```bash
 g++ main_GMP.cpp -o program -lgmp
 ```
-
----
-
-## 📜 License
-
-Opcjonalnie informacja o licencji.
