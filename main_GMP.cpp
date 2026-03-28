@@ -15,23 +15,39 @@ void vector_to_mpz(mpz_t result, const std::vector<uint32_t>& vec){
         mpz_import(result, vec.size(), 1, sizeof(uint32_t), 0, 0, vec.data());
     }
 
+struct TimeResult {
+    double value;
+    std::string unit;
+};
 
-////////////////////////////////////////
-//
-// MAIN
-//
-/////////////////////////////////////////
+//function with input in nanoseconds, and returns value and unit (ns, μs, ms, s) depending on the input
+TimeResult choose_time_unit(double input_ns) {
+    TimeResult result;
+    if (input_ns < 1000) {
+        result.value = input_ns; // nanoseconds
+        result.unit = "ns";
+    } else if (input_ns < 1'000'000) {
+        result.value = input_ns / 1000; // microseconds
+        result.unit = "μs";
+    } else if (input_ns < 1'000'000'000) {
+        result.value = input_ns / 1'000'000; // milliseconds
+        result.unit = "ms";
+    } else {
+        result.value = input_ns / 1'000'000'000; // seconds
+        result.unit = "s";
+    }
+    return result;
+}
 
-size_t SIZE = 600; // Number of words (32-bit)
 
-int main() {
-    std::ifstream file("data_" + std::to_string(SIZE) + ".txt");
+int main_func(const std::string& input_filename, const std::string& output_csv) {
+    std::ifstream file(input_filename);
     if (!file) {
         std::cout << "Error opening file!" << std::endl;
         return 1;
     }
 
-    std::ofstream csv_file("resultsGMP.csv", std::ios::app);
+    std::ofstream csv_file(output_csv, std::ios::app);
     if (!csv_file) {
         std::cout << "Error opening CSV file!" << std::endl;
         return 1;
@@ -53,6 +69,8 @@ int main() {
             vec2.push_back(word);
         }
 
+        size_t num_words = vec1.size(); // Assuming both vectors have the same size
+
         mpz_t num1, num2, result;
         mpz_init(num1);
         mpz_init(num2);
@@ -65,11 +83,12 @@ int main() {
         auto start = std::chrono::high_resolution_clock::now();
         mpz_mul(result, num1, num2);
         auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
 
+        TimeResult time_result = choose_time_unit(duration);
 
-        std::cout << "mpz_mul execution time: " << duration.count() << " microseconds" << std::endl;
-        csv_file << SIZE << "," << duration.count() << std::endl;
+        std::cout << "mpz_mul execution time: " << time_result.value << " " << time_result.unit << std::endl;
+        csv_file << num_words << "," << time_result.value << "," << time_result.unit << std::endl;
 
         // Print the results
         /*
@@ -86,6 +105,23 @@ int main() {
 
     file.close();
     csv_file.close();
+    return 0;
+}
+////////////////////////////////////////
+//
+// MAIN
+//
+/////////////////////////////////////////
+
+
+int main() {
+
+    size_t SIZE = 50; // Change this value to test different sizes (number of words)
+
+    std::string input_filename = "data_" + std::to_string(SIZE) + ".txt";
+    std::string output_csv = "resultsGMP.csv";
+
+    main_func(input_filename, output_csv);
 
     return 0;
 }
