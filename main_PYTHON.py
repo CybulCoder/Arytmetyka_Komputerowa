@@ -29,8 +29,6 @@ def choose_time_unit(input_micro):
 
 def main_func(input_filename, output_csv):
     """Main function to read numbers from file, multiply them and measure execution time"""
-    filename = input_filename
-    csv_filename = output_csv
     try:
         with open(input_filename, 'r') as f, open(output_csv, 'a') as csv_file:
             while True:
