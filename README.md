@@ -98,7 +98,7 @@ Opis:
 
   ---
 
-  ###CMakeLists.txt
+  ### CMakeLists.txt
 
 > Plik konfiguracyjny
   
@@ -113,6 +113,6 @@ cmake -G "MinGW Makefiles" ..
 cmake --build . --target run_all
 ```
 ---
-###requirements.txt
+### requirements.txt
 
 > Lista potrzebnych modułów pythona wykorzystanych w projekcie
