@@ -28,7 +28,7 @@ def Generate_Random_Number(num_words, filename):
 # MAIN
 
 for i in range(50,1000+1,50):
-    filename = 'data_{}.txt'.format(i)
+    filename = 'Dane_wygenerowane/data_{}.txt'.format(i)
     
     for _ in range(0,40):
         Generate_Random_Number(i, filename)

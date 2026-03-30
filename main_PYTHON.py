@@ -19,7 +19,7 @@ def choose_time_unit(input_micro):
         return input_micro * 1000, "ns"
     elif input_micro < 1000:
         #microseconds
-        return input_micro, "μs"
+        return input_micro, "us"
     elif input_micro < 1_000_000:
         #miliseconds
         return input_micro / 1000, "ms"
@@ -32,7 +32,7 @@ def main_func(input_filename, output_csv):
     filename = input_filename
     csv_filename = output_csv
     try:
-        with open(input_filename, 'r') as f, open(output_csv, 'a') as csv_file:
+        with open(input_filename, 'r') as f, open(output_csv, 'a', encoding='utf-8') as csv_file:
             while True:
                 line1 = f.readline()
                 if not line1:
@@ -54,17 +54,19 @@ def main_func(input_filename, output_csv):
 
                 csv_file.write(f"{len(words1)},{final_duration:.2f},{unit}\n")
                 #print('Done for {} words'.format(len(words1)))
-    except:
-        print('Error while reading file!')
+    except Exception as e :
+        print(f'Error while reading file: {e}!')
 
 
 
 # choose size of numbers to test
-SIZE = 500
-
-
-in_filename = 'data_{}.txt'.format(SIZE)
+sizes = [s for s in range(50, 1001, 50)]
 out_filename = 'resultsPython.csv'
 
+for size in sizes:
 
-main_func(in_filename, out_filename)
+    in_filename = rf'Dane_wygenerowane/data_{size}.txt'
+    out_filename = 'resultsPython.csv'
+
+
+    main_func(in_filename, out_filename)

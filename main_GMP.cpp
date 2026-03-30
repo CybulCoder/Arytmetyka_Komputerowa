@@ -28,7 +28,7 @@ TimeResult choose_time_unit(double input_ns) {
         result.unit = "ns";
     } else if (input_ns < 1'000'000) {
         result.value = input_ns / 1000; // microseconds
-        result.unit = "μs";
+        result.unit = "us";
     } else if (input_ns < 1'000'000'000) {
         result.value = input_ns / 1'000'000; // milliseconds
         result.unit = "ms";
@@ -116,12 +116,15 @@ int main_func(const std::string& input_filename, const std::string& output_csv) 
 
 int main() {
 
-    size_t SIZE = 50; // Change this value to test different sizes (number of words)
+    std::vector<size_t> sizes = {50, 100, 150, 200, 250, 300, 350, 400, 450, 500,
+        550, 600, 650, 700, 750, 800, 850, 900, 950, 1000}; //vector of sizes as numbers of words
+    
+    for (size_t size : sizes){
+        std::string input_filename = "C:/Users/szyms/licencjat/Arytmetyka_Komputerowa/Dane_wygenerowane/data_" + std::to_string(size) + ".txt";
+        std::string output_csv = "resultsGMP.csv";
 
-    std::string input_filename = "data_" + std::to_string(SIZE) + ".txt";
-    std::string output_csv = "resultsGMP.csv";
-
-    main_func(input_filename, output_csv);
+        main_func(input_filename, output_csv);
+    }
 
     return 0;
 }
