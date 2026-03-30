@@ -94,5 +94,22 @@ Opis:
 * Obliczenie średnich czasów i odchyleń standardowych
 * Rysowanie wykresów
 * Dopasowanie regresjii nieliniowej, model to:
-  \[ t = a \cdot x^n \]
+   $$t = a \cdot x^n$$
+
+  ---
+
+  ###CMakeLists.txt
+
+> Plik konfiguracyjny
+  
+*W katalogu roboczym należy utworzyć folder *build* i do niego przejść:
+```bash
+mkdir build
+cd build
+```
+* Następnie należy wykonać polecenia:
+```bash
+cmake -G "MinGW Makefiles" ..
+cmake --build . --target run_all
+```
 
