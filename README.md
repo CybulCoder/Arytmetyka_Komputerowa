@@ -112,4 +112,7 @@ cd build
 cmake -G "MinGW Makefiles" ..
 cmake --build . --target run_all
 ```
+---
+###requirements.txt
 
+> Lista potrzebnych modułów pythona wykorzystanych w projekcie
