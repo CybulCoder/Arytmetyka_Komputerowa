@@ -75,7 +75,7 @@ def draw_regression(df_stats, title):
     plt.tight_layout()
     plt.xlabel("Długość liczb [słowa 32-bitowe]")
     plt.ylabel("Czas [us]")
-    plt.title(f"{title}. a={params[0]}, n={params[1]}")
+    plt.title(f"{title}. a={round(params[0], 4)}, n={round(params[1], 4)}")
     plt.show()
 
 def workflow():
