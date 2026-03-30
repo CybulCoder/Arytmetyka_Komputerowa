@@ -118,8 +118,8 @@ int main() {
 
     size_t SIZE = 50; // Change this value to test different sizes (number of words)
 
-    std::string input_filename = "data_" + std::to_string(SIZE) + ".txt";
-    std::string output_csv = "resultsGMP.csv";
+    std::string input_filename = "EXTRA_data.txt";
+    std::string output_csv = "EXTRAresultsGMP.csv";
 
     main_func(input_filename, output_csv);
 
