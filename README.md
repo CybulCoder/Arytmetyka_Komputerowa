@@ -23,8 +23,6 @@ Opis:
 
 Zawiera
 * Dokumentacja.pdf
-* main.tex -- kod główny
-* references.bib -- elementy bibliografii
 * Oraz zdjęcia wykorzystane
 
 ---
@@ -116,3 +114,14 @@ cmake --build . --target run_all
 ### requirements.txt
 
 > Lista potrzebnych modułów pythona wykorzystanych w projekcie
+
+### 'EXTRA_data_gen.py'
+
+> Skrypt pomocniczy do wygenrowania danych do dodatkowego celu 1.
+
+* Importuje funkcję Generate_Random_Number z skryptu data_gen.py
+* Dane zostaję zapisane w pliku o nazwie: 'EXTRA_data.txt'
+
+### 'EXTRAresultsGMP.csv'
+
+> Wyniki czasowe mnożenia liczby z EXTRA_data.txt za pomocą GMP
