@@ -1,0 +1,15 @@
+STAN PRAC NA DZIEŃ 1 kwietnia 2026
+Projekt: Arytmetyka Komputerowa
+Cybulski Mateusz, Derron Tomasz, Domiński Bartosz
+
+Temat: Implementacja algorytmu mnożenia Toom-Cook'a (Toom-3) dla liczb całkowitych dowolnej precyzji w C++. Zaprojektowanie i przeprowadzenie eksperymentu mającego na celu porównanie utworzonej implementacji z istniejącymi bibliotekami: GMP i wbudowaną biblioteką w Python.
+
+Co zrobiono:
+- Ustalona Metodologia badań i specyfikacja eksperymentów,
+- Napisany kod, generujący próbkę/dane,
+- Napisany kod, liczący czas działania biblioteki GNU MP,
+- Napisany kod, liczący czas działania wbudowanych funkcji Python'a,
+- Skończony dodatkowy cel tj. sprawdzenie jak duże liczby można pomnożyć w danym czasie,
+- Stworzony ,,workflow'' za pomocą CMake, uruchamiający pliki i przetwarzający dane wyjściowe,
+- Niedokończony własny szkielet pod własną implementację Toom3.
+- Napisana część dokumentacji
