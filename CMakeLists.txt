@@ -26,22 +26,33 @@ add_custom_target(run_main_gmp
     COMMENT "Step 2: Running main_GMP.cpp"
 )
 
+#toomcook3 nasza implementacja mnożenie
+add_executable(implementacja ${CMAKE_SOURCE_DIR}/implementacja.cpp)
+
+add_custom_target(run_implementacja
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/implementacja.exe
+    DEPENDS implementacja
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Step 3: Running implementacja.cpp"
+)
+
 #Python mnożenie
 add_custom_target(run_main_python
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/main_PYTHON.py
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Step 3: Running main_PYTHON.py"
+    COMMENT "Step 4: Running main_PYTHON.py"
 )
 
 #wykresy
 add_custom_target(run_analysis
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/analysis.py
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Step 4: Running analysis.py"
+    COMMENT "Step 5: Running analysis.py"
 )
 #kolejność
 add_dependencies(run_main_gmp run_data_gen)
-add_dependencies(run_main_python run_main_gmp)
+add_dependencies(run_implementacja run_main_gmp)
+add_dependencies(run_main_python run_implementacja)
 add_dependencies(run_analysis run_main_python)
 
 
