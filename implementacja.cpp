@@ -323,7 +323,6 @@ WielkaLiczba mnoz_toomcook3(WielkaLiczba& a, WielkaLiczba& b){
         return mnoz_karatsuba(a, b);
     }
     int k = std::ceil(n / 3.0);
-    std::cout<<"n="<<n<<",k="<<k<<"\n";
     WielkaLiczba a0 = mod_podst_k(a, k);
     WielkaLiczba a1 = dziel_calk_pot(a, k);
     a1 = mod_podst_k(a1, k);
