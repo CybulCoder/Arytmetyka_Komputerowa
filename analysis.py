@@ -255,6 +255,14 @@ def workflow(unit='us'):
 
         res_final = pd.concat([r1, r2, r5, r3, r4, r6], ignore_index=True)
         res_final.to_csv("Raport.csv", index=False)
+
+        #raport z czasami
+        stats_python.columns = [c + "_py" for c in stats_python.columns]
+        stats_gmp.columns = [c + "_gmp" for c in stats_gmp.columns]
+        stats_imp.columns = [c + "_toom" for c in stats_imp.columns]
+
+        df_raport1 = pd.concat([stats_gmp, stats_python, stats_imp], axis=1)
+        df_raport1.to_csv("Raport_1.csv")
     except Exception as e:
         print(f"Błąd: {e}")
 
