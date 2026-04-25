@@ -3,10 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.stats import zscore
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error, root_mean_squared_error
 
 #rozmiar wykresów
-FIGSIZE = (10, 7)
+FIGSIZE = (10, 6)
 
 
 def load_file(file_name):
@@ -119,17 +119,17 @@ def plot_one_method(df_stats, title, unit='us'):
         print("Należy podać jednostkę z listy: ['us', 'ms', 'ns']")
         return None
     y_label = f"Czas [{unit}]"
-    plt.figure(figsize=FIGSIZE, dpi=100)
-    plt.scatter(df_stats.index, df_stats.average, color='blue')
-    plt.scatter(np.array(df_stats.index), np.array(df_stats.average) + np.array(df_stats.st_dev), marker="_", color="black")
-    plt.scatter(np.array(df_stats.index), np.array(df_stats.average) - np.array(df_stats.st_dev), marker="_", color="black")
-    plt.vlines(df_stats.index, np.array(df_stats.average) - np.array(df_stats.st_dev),
+    fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout=True)
+    ax.scatter(df_stats.index, df_stats.average, color='blue')
+    ax.scatter(np.array(df_stats.index), np.array(df_stats.average) + np.array(df_stats.st_dev), marker="_", color="black")
+    ax.scatter(np.array(df_stats.index), np.array(df_stats.average) - np.array(df_stats.st_dev), marker="_", color="black")
+    ax.vlines(df_stats.index, np.array(df_stats.average) - np.array(df_stats.st_dev),
                np.array(df_stats.average) + np.array(df_stats.st_dev), color="black", linewidth=1)
-    plt.xlabel("Długość liczb [słowa 32-bitowe]")
-    plt.xlim(40, 1010)
-    plt.ylabel(y_label)
-    plt.tight_layout()
-    plt.title(title)
+    ax.set_xlabel("Długość liczb [słowa 32-bitowe]")
+    ax.set_xlim(40, 1010)
+    ax.set_ylabel(y_label)
+    fig.subplots_adjust(bottom=0.15, top=0.9)
+    ax.set_title(title)
     plt.show()
 
 def model(x,a,n):
@@ -161,18 +161,19 @@ def draw_regression(df_stats, title, unit='us'):
     r2 = r2_score(t, preds)
     perr = np.sqrt(np.diag(pcov))
     d = {"0":[title, 'No', round(params[0], 4), round(perr[0],4), round(params[1], 4),round(perr[1], 4),
-              round(r2, 4), mess, code]}
+              round(r2, 4), mean_squared_error(preds, t), root_mean_squared_error(preds, t), 
+              mean_absolute_error(preds, t), mess, code]}
     res = pd.DataFrame.from_dict(data=d, orient='index',
-                                columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "message", "code"])
+                                columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "mse", "rmse", "mae", "message", "code"])
 
-    plt.figure(figsize=FIGSIZE, dpi=100)
-    plt.scatter(l, t, label="zmierzone czasy", color="black")
-    plt.plot(l, preds, label="dopasowanie")
-    plt.legend()
-    plt.tight_layout()
-    plt.xlabel("Długość liczb [słowa 32-bitowe]")
-    plt.ylabel(y_label)
-    plt.title(f"{title}. a={round(params[0], 3)}, n={round(params[1],3)}")
+    fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
+    ax.scatter(l, t, label="zmierzone czasy", color="black")
+    ax.plot(l, preds, label="dopasowanie")
+    ax.legend()
+    ax.set_xlabel("Długość liczb [słowa 32-bitowe]")
+    ax.set_ylabel(y_label)
+    ax.set_title(f"{title}. a={round(params[0], 3)}, n={round(params[1],3)}")
+    fig.subplots_adjust(top=0.9, bottom=0.15)
     plt.show()
     return res
 
@@ -195,18 +196,26 @@ def draw_transformed_regression(df_stats, title, unit='us'):
     r2 = r2_score(t, preds)
     perr = np.sqrt(np.diag(pcov))
     d = {"0":[title, 'Yes', round(params[0], 4), round(perr[0],4), round(params[1], 4),round(perr[1], 4),
-              round(r2, 4), mess, code]}
+              round(r2, 4), mean_squared_error(preds, t_tr), root_mean_squared_error(preds, t_tr), 
+              mean_absolute_error(preds, t_tr), mess, code]}
     res = pd.DataFrame.from_dict(data=d, orient='index',
-                                columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "message", "code"])
+                                columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "mse", "rmse", "mae", "message", "code"])
 
-    plt.figure(figsize=FIGSIZE, dpi=100)
-    plt.plot(l_tr, model_tr(l_tr, *params), label="Dopasowanie", color="r")
-    plt.scatter(l_tr, t_tr, color="b", label="Dane")
-    plt.ylabel(y_label)
-    plt.xlabel("log(dlugosc)")
-    plt.title(rf"{title}. n={round(params[1],3)}, a={round(params[0],3)}, model: $\log (t)=\log (a)+n\cdot \log (dlugosc)$") # zobaczyc czy tu wszystko dziala te {} wszystkie
+    fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
+    ax.plot(l_tr, model_tr(l_tr, *params), label="Dopasowanie", color="r")
+    ax.scatter(l_tr, t_tr, color="b", label="Dane")
+    ax.set_ylabel(y_label)
+    ax.set_xlabel("log(dlugosc)")
+    ax.set_title(rf"{title}. n={round(params[1],3)}, a={round(params[0],3)}, model: $\log (t)=\log (a)+n\cdot \log (dlugosc)$") # zobaczyc czy tu wszystko dziala te {} wszystkie
+    fig.subplots_adjust(top=0.9, bottom=0.15)
     plt.show()
     return res
+
+def model_teor(x, a):
+    return a * x ** 1.465
+
+def model_teor_tr(x, a):
+    return np.log(a) + 1.465 * x
 
 def workflow(unit='us'):
     '''Funkcja z ogólnym workflowem'''
@@ -227,23 +236,23 @@ def workflow(unit='us'):
         stats_python = calculate_stats(df_python)
         stats_gmp = calculate_stats(df_gmp)
         stats_imp = calculate_stats(df_imp)
-
+        
         plot_one_method(stats_python, "Czas vs długość - python", unit=unit)
         plot_one_method(stats_gmp, "Czas vs długość - gmp", unit=unit)
         plot_one_method(stats_imp, "Czas vs długość - ToomCook3", unit=unit)
 
         #porownanie 
-        plt.figure(figsize=FIGSIZE, dpi = 100)
-        plt.plot(stats_python.index, stats_python.average, label="python")
-        plt.plot(stats_gmp.index, stats_gmp.average, label="gmp")
-        plt.plot(stats_imp.index, stats_imp.average, label="toomcook3")
-        plt.legend()
-        plt.title("Porównanie trzech rodzajów mnożeń")
-        plt.tight_layout()
-        plt.xlim(40, 1010) #na sztywno ustalony (przynajmniej na razie)
-        plt.xlabel("Długość liczb [słowa 32-bitowe]")
+        fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
+        ax.plot(stats_python.index, stats_python.average, label="python")
+        ax.plot(stats_gmp.index, stats_gmp.average, label="gmp")
+        ax.plot(stats_imp.index, stats_imp.average, label="toomcook3")
+        ax.legend()
+        ax.set_title("Porównanie trzech rodzajów mnożeń")
+        ax.set_xlim(40, 1010) #na sztywno ustalony (przynajmniej na razie)
+        ax.set_xlabel("Długość liczb [słowa 32-bitowe]")
 
-        plt.ylabel(f"Czas [{unit}]")
+        ax.set_ylabel(f"Czas [{unit}]")
+        fig.subplots_adjust(top=0.9, bottom=0.15)
         plt.show()
 
         r1 = draw_regression(stats_python, "Regresja-python", unit=unit)
@@ -253,9 +262,60 @@ def workflow(unit='us'):
         r4 = draw_transformed_regression(stats_gmp, "Regresja tr gmp", unit=unit)
         r6 = draw_transformed_regression(stats_imp, "Regresja tr toom", unit=unit)
 
-        res_final = pd.concat([r1, r2, r5, r3, r4, r6], ignore_index=True)
-        res_final.to_csv("Raport.csv", index=False)
+        #dopasowanie modelu teoretycznego n=1,465
+        #bez transformacji
+        
+        rzedy = []# wiersze do raportu
+        for df, tyt in zip([stats_gmp, stats_python, stats_imp], ["model_teor gmp", "model_teor python", "model_teor imp"]):
+            l = np.array(df.index)
+            t = np.array(df.average)
 
+            popt, pcov, _, mess, code = curve_fit(model_teor, l, t, full_output=True)
+            preds = model_teor(l, *popt)
+            r_2 = r2_score(t, preds)
+            perr = np.sqrt(np.diag(pcov))
+            fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
+            ax.plot(l, model_teor(l, *popt), label="Dopasowanie", color="r")
+            ax.scatter(l, t, color="b", label="Dane")
+            ax.set_ylabel(f"t [{unit}]")
+            ax.set_xlabel("log(dlugosc)")
+            ax.set_title(rf"{tyt}. n=1.465, a={round(popt[0],3)}, model: $ t = a \cdot x ** 1,465 $") 
+            fig.subplots_adjust(top=0.9, bottom=0.15)
+            plt.show()
+            d = {"0":[tyt, 'No', round(popt[0], 4), round(perr[0],4), "-","-",
+              round(r_2, 4), mean_squared_error(preds, t), root_mean_squared_error(preds, t), mean_absolute_error(preds, t), mess, code]}
+            res = pd.DataFrame.from_dict(data=d, orient='index',
+                                columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "mse", "rmse", "mae", "message", "code"])
+            rzedy.append(res.copy())
+        #z transformacją
+        for df, tyt in zip([stats_gmp, stats_python, stats_imp], ["model_teor tr gmp", "model_teor tr python", "model_teor tr imp"]):
+            l = np.array(df.index)
+            t = np.array(df.average)
+            l_tr = np.log(l)
+            t_tr = np.log(t)
+
+            popt, pcov, _, mess, code = curve_fit(model_teor_tr, l_tr, t_tr, full_output=True)
+            preds = model_teor_tr(l_tr, *popt)
+            r_2 = r2_score(t_tr, preds)
+            perr = np.sqrt(np.diag(pcov))
+            fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
+            ax.plot(l_tr, model_teor_tr(l_tr, *popt), label="Dopasowanie", color="r")
+            ax.scatter(l_tr, t_tr, color="b", label="Dane")
+            ax.set_ylabel(f"t [{unit}]")
+            ax.set_xlabel("log(dlugosc)")
+            ax.set_title(rf"{tyt}. n=1.465, a={round(popt[0],3)}, model: $\log (t)=\log (a)+1,465\cdot \log (dlugosc)$") 
+            fig.subplots_adjust(top=0.9, bottom=0.15)
+            plt.show()
+            d = {"0":[tyt, 'Yes', round(popt[0], 4), round(perr[0],4), "-","-",
+              round(r_2, 4), mean_squared_error(preds, t_tr), root_mean_squared_error(preds, t_tr), mean_absolute_error(preds, t_tr), mess, code]}
+            res = pd.DataFrame.from_dict(data=d, orient='index',
+                                columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "mse", "rmse", "mae", "message", "code"])
+            rzedy.append(res.copy())
+        print(rzedy)
+        res_final = pd.concat(([r1, r2, r5, r3, r4, r6]+rzedy), ignore_index=True)
+        res_final.to_csv("Raport.csv", index=False)
+        print("r1 sie udal")
+        
         #raport z czasami
         stats_python.columns = [c + "_py" for c in stats_python.columns]
         stats_gmp.columns = [c + "_gmp" for c in stats_gmp.columns]
@@ -264,6 +324,6 @@ def workflow(unit='us'):
         df_raport1 = pd.concat([stats_gmp, stats_python, stats_imp], axis=1)
         df_raport1.to_csv("Raport_1.csv")
     except Exception as e:
-        print(f"Błąd: {e}")
+        print(f"Błąd podczas analizy: {e}")
 
 workflow()
