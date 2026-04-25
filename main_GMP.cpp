@@ -19,6 +19,28 @@ struct TimeResult {
     double value;
     std::string unit;
 };
+//funkcja do zamiany liczby na wektor w bazie 2^32 (taki jak w pliku z danymi wygenerowanymi)
+std::vector<uint32_t> to_base_2_32(mpz_t n) {
+    size_t count = 0;
+
+    // najpierw sprawdzamy ile będzie limbów
+    size_t size = (mpz_sizeinbase(n, 2) + 31) / 32;
+
+    std::vector<uint32_t> v(size);
+
+    mpz_export(
+        v.data(),      // output
+        &count,        // ile faktycznie zapisano
+        1,             // order: 1 = MSB-first
+        sizeof(uint32_t),
+        0,             // endian (0 = native)
+        0,
+        n
+    );
+
+    v.resize(count);
+    return v;
+}
 
 //function with input in nanoseconds, and returns value and unit (ns, μs, ms, s) depending on the input
 TimeResult choose_time_unit(double input_ns) {
@@ -120,7 +142,7 @@ int main() {
         550, 600, 650, 700, 750, 800, 850, 900, 950, 1000}; //vector of sizes as numbers of words
     
     for (size_t size : sizes){
-        std::string input_filename = "C:/Users/szyms/licencjat/Arytmetyka_Komputerowa/Dane_wygenerowane/data_" + std::to_string(size) + ".txt";
+        std::string input_filename = "Dane_wygenerowane/data_" + std::to_string(size) + ".txt";
         std::string output_csv = "resultsGMP.csv";
 
         main_func(input_filename, output_csv);
