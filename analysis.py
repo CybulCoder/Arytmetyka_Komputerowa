@@ -102,7 +102,7 @@ def calculate_stats(df):
         print("Nie znaleziono kolumny z ujednoliconą jednostką czasu (przy wywołaniu calculate_stats)")
         return
     
-    avg = df.groupby("length")[col_name].mean()
+    avg = df.groupby("length")[col_name].median()
     st_dev = df.groupby("length")[col_name].std() #sample standard deviation
     result = pd.merge(avg, st_dev, left_index=True, right_index=True)
     result.columns = ["average", "st_dev"]
@@ -166,13 +166,16 @@ def draw_regression(df_stats, title, unit='us'):
     res = pd.DataFrame.from_dict(data=d, orient='index',
                                 columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "mse", "rmse", "mae", "message", "code"])
 
+    tekst = f"$t = {params[0]:.3f}\cdot l^{{{params[1]:.3f}}}$\n$R^2 = {r2:.3f}$"
     fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
     ax.scatter(l, t, label="zmierzone czasy", color="black")
     ax.plot(l, preds, label="dopasowanie")
     ax.legend()
     ax.set_xlabel("Długość liczb [słowa 32-bitowe]")
     ax.set_ylabel(y_label)
-    ax.set_title(f"{title}. a={round(params[0], 3)}, n={round(params[1],3)}")
+    ax.set_title(f"{title}.")
+    ax.text(0.01, 0.8, tekst, transform=ax.transAxes,
+        ha='left', va='center')
     fig.subplots_adjust(top=0.9, bottom=0.15)
     plt.show()
     return res
@@ -201,12 +204,16 @@ def draw_transformed_regression(df_stats, title, unit='us'):
     res = pd.DataFrame.from_dict(data=d, orient='index',
                                 columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "mse", "rmse", "mae", "message", "code"])
 
+    tekst = f"$log(t)={params[1]:.3f}\cdot log(l) + log({params[0]:.3f})$\n$R^2={r2:.3f}$"
     fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
     ax.plot(l_tr, model_tr(l_tr, *params), label="Dopasowanie", color="r")
     ax.scatter(l_tr, t_tr, color="b", label="Dane")
     ax.set_ylabel(y_label)
     ax.set_xlabel("log(dlugosc)")
-    ax.set_title(rf"{title}. n={round(params[1],3)}, a={round(params[0],3)}, model: $\log (t)=\log (a)+n\cdot \log (dlugosc)$") # zobaczyc czy tu wszystko dziala te {} wszystkie
+    ax.set_title(rf"{title}.") # zobaczyc czy tu wszystko dziala te {} wszystkie
+    ax.text(0.01, 0.8, tekst, transform=ax.transAxes,
+        ha='left', va='center')
+    ax.legend()
     fig.subplots_adjust(top=0.9, bottom=0.15)
     plt.show()
     return res
@@ -266,7 +273,7 @@ def workflow(unit='us'):
         #bez transformacji
         
         rzedy = []# wiersze do raportu
-        for df, tyt in zip([stats_gmp, stats_python, stats_imp], ["model_teor gmp", "model_teor python", "model_teor imp"]):
+        for df, tyt in zip([stats_gmp, stats_python, stats_imp], ["Dopasowanie do teoretycznego modelu - gmp", "Dopasowanie do teoretycznego modelu - python", "Dopasowanie do teoretycznego modelu - imp"]):
             l = np.array(df.index)
             t = np.array(df.average)
 
@@ -274,12 +281,16 @@ def workflow(unit='us'):
             preds = model_teor(l, *popt)
             r_2 = r2_score(t, preds)
             perr = np.sqrt(np.diag(pcov))
+            tekst = f"$t = {popt[0]:.3f} \cdot l^{{{1.465}}}$\n$R^2 = {r_2:.3f}$"
             fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
             ax.plot(l, model_teor(l, *popt), label="Dopasowanie", color="r")
             ax.scatter(l, t, color="b", label="Dane")
             ax.set_ylabel(f"t [{unit}]")
             ax.set_xlabel("log(dlugosc)")
-            ax.set_title(rf"{tyt}. n=1.465, a={round(popt[0],3)}, model: $ t = a \cdot x ** 1,465 $") 
+            ax.set_title(rf"{tyt}.") 
+            ax.text(0.01, 0.8, tekst, transform=ax.transAxes,
+                ha='left', va='center')
+            ax.legend()
             fig.subplots_adjust(top=0.9, bottom=0.15)
             plt.show()
             d = {"0":[tyt, 'No', round(popt[0], 4), round(perr[0],4), "-","-",
@@ -288,7 +299,7 @@ def workflow(unit='us'):
                                 columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "mse", "rmse", "mae", "message", "code"])
             rzedy.append(res.copy())
         #z transformacją
-        for df, tyt in zip([stats_gmp, stats_python, stats_imp], ["model_teor tr gmp", "model_teor tr python", "model_teor tr imp"]):
+        for df, tyt in zip([stats_gmp, stats_python, stats_imp], ["Dopasowanie do teoretycznego modelu - tr. gmp", "Dopasowanie do teoretycznego modelu - tr. python", "Dopasowanie do teoretycznego modelu - tr. imp"]):
             l = np.array(df.index)
             t = np.array(df.average)
             l_tr = np.log(l)
@@ -298,12 +309,16 @@ def workflow(unit='us'):
             preds = model_teor_tr(l_tr, *popt)
             r_2 = r2_score(t_tr, preds)
             perr = np.sqrt(np.diag(pcov))
+            tekst = f"$log(t) = log({popt[0]:.3f}) + 1.465\cdot log(l)$\n$R^2 = {r_2:.3f}$"
             fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
             ax.plot(l_tr, model_teor_tr(l_tr, *popt), label="Dopasowanie", color="r")
             ax.scatter(l_tr, t_tr, color="b", label="Dane")
             ax.set_ylabel(f"t [{unit}]")
             ax.set_xlabel("log(dlugosc)")
-            ax.set_title(rf"{tyt}. n=1.465, a={round(popt[0],3)}, model: $\log (t)=\log (a)+1,465\cdot \log (dlugosc)$") 
+            ax.set_title(rf"{tyt}.") 
+            ax.text(0.01, 0.8, tekst, transform=ax.transAxes,
+                ha='left', va='center')
+            ax.legend()
             fig.subplots_adjust(top=0.9, bottom=0.15)
             plt.show()
             d = {"0":[tyt, 'Yes', round(popt[0], 4), round(perr[0],4), "-","-",
