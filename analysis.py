@@ -187,7 +187,7 @@ def draw_transformed_regression(df_stats, title, unit='us'):
     if not unit in ['us', 'ms', 'ns']:
         print("Należy podać jednostkę z listy: ['us', 'ms', 'ns']")
         return None
-    y_label = f"log(t) orginalnie [{unit}]"
+    y_label = f"log(t)"
     l = np.array(df_stats.index)
     t = np.array(df_stats.average)
     l_tr = np.log(l)
@@ -209,7 +209,7 @@ def draw_transformed_regression(df_stats, title, unit='us'):
     ax.plot(l_tr, model_tr(l_tr, *params), label="Dopasowanie", color="r")
     ax.scatter(l_tr, t_tr, color="b", label="Dane")
     ax.set_ylabel(y_label)
-    ax.set_xlabel("log(dlugosc)")
+    ax.set_xlabel("log(l)")
     ax.set_title(rf"{title}.") # zobaczyc czy tu wszystko dziala te {} wszystkie
     ax.text(0.01, 0.8, tekst, transform=ax.transAxes,
         ha='left', va='center')
@@ -313,8 +313,8 @@ def workflow(unit='us'):
             fig, ax = plt.subplots(figsize=FIGSIZE, constrained_layout = True)
             ax.plot(l_tr, model_teor_tr(l_tr, *popt), label="Dopasowanie", color="r")
             ax.scatter(l_tr, t_tr, color="b", label="Dane")
-            ax.set_ylabel(f"t [{unit}]")
-            ax.set_xlabel("log(dlugosc)")
+            ax.set_ylabel(f"log(t) ")
+            ax.set_xlabel("log(l)")
             ax.set_title(rf"{tyt}.") 
             ax.text(0.01, 0.8, tekst, transform=ax.transAxes,
                 ha='left', va='center')
