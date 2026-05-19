@@ -100,7 +100,7 @@ Opis:
 
 > Plik konfiguracyjny
   
-*W katalogu roboczym należy utworzyć folder *build* i do niego przejść:
+* W katalogu roboczym należy utworzyć folder *build* i do niego przejść:
 ```bash
 mkdir build
 cd build
