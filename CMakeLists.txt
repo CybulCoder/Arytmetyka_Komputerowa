@@ -20,7 +20,7 @@ add_executable(main_gmp ${CMAKE_SOURCE_DIR}/main_GMP.cpp)
 target_link_libraries(main_gmp gmp)
 
 add_custom_target(run_main_gmp
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/main_gmp.exe
+    COMMAND $<TARGET_FILE:main_gmp>
     DEPENDS main_gmp
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Step 2: Running main_GMP.cpp"
@@ -30,7 +30,7 @@ add_custom_target(run_main_gmp
 add_executable(implementacja ${CMAKE_SOURCE_DIR}/implementacja.cpp)
 
 add_custom_target(run_implementacja
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/implementacja.exe
+    COMMAND $<TARGET_FILE:implementacja>
     DEPENDS implementacja
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Step 3: Running implementacja.cpp"
