@@ -326,10 +326,8 @@ def workflow(unit='us'):
             res = pd.DataFrame.from_dict(data=d, orient='index',
                                 columns=["title", "is_transformed", "a", "a_std_err", "n", "n_std_err", "r2", "mse", "rmse", "mae", "message", "code"])
             rzedy.append(res.copy())
-        print(rzedy)
         res_final = pd.concat(([r1, r2, r5, r3, r4, r6]+rzedy), ignore_index=True)
         res_final.to_csv("Raport.csv", index=False)
-        print("r1 sie udal")
         
         #raport z czasami
         stats_python.columns = [c + "_py" for c in stats_python.columns]
