@@ -2,6 +2,15 @@
 
 # UWAGA: Projekt w trakcie realizacji! 🚧 🏗️ 🚧
 
+---
+
+### 📋 `Istrukcja uruchomienia pełnej analizy.pdf`
+
+* Zawiera instrukcje do uruchomienia experymentu na własnym komputerze
+* Należy się upewnić czy zainstalowane są odpowiednie pakiety podane w instrukcji
+
+---
+
 ### 📂 `Dane_wygenerowane`
 
 Opis:
@@ -19,11 +28,8 @@ Opis:
 
 Opis:
 
-> Dokumentacja techniczna projektu, kod w .tex
+> Dokumentacja projektu
 
-Zawiera
-* Dokumentacja.pdf
-* Oraz zdjęcia wykorzystane
 
 ---
 
@@ -35,7 +41,51 @@ Opis:
 
 ---
 
-## 📄 Pliki
+### `CMakeLists.txt`
+
+Opis:
+
+> Plik konfiguracyjny
+
+---
+
+### `EXTRA_data_gen.py`
+
+> Skrypt pomocniczy do wygenrowania danych do dodatkowego celu 1.
+
+* Importuje funkcję Generate_Random_Number z skryptu data_gen.py
+* Dane zostają zapisane w pliku o nazwie: 'EXTRA_data.txt'
+
+---
+
+### `EXTRAresultsGMP.csv`
+
+> Wyniki czasowe mnożenia liczby z EXTRA_data.txt za pomocą GMP
+
+---
+
+
+### `STAN_PRAC_01_04_2026.txt`
+> Plik informujący o stanie prac na dzień 01.04.2024
+> Wymagane dla komisji projektowej
+
+---
+
+### `analysis.py`
+
+Opis:
+
+> Pobiera dane z plików .csv, rysuje wykresy, dopasowuje regresję nieliniową
+
+* Odczytanie plików .csv
+* Wyrównanie jednostek
+* Odrzucenie wartości odstających (reguła 3 sigma)
+* Obliczenie średnich czasów i odchyleń standardowych
+* Rysowanie wykresów
+* Dopasowanie regresjii nieliniowej, model to:
+   $$t = a \cdot x^n$$
+
+---
 
 ### 🐍 `data_gen.py`
 
@@ -50,15 +100,28 @@ Opis:
 
 ---
 
-### 🐍 `main_PYTHON.py`
+### `fast_tests.cpp`
 
 Opis:
 
-> Mierzy czas wykonania mnożenia przez wbudowany typ Python'a
+> Plik źródłowy, za którego pomocą można sprawdzić czas wykonania algorytmów
+> w zależności od przyjętego formatu
 
-* Pomiary przeprowadzone są dla każdej z długości w zmiennej sizes
-* Zapisuje wyniki do pliku 📊**resultsPYTHON.csv** w formacie: SIZE, time, unit
-* time może być podany w nanosekundach, mikrosekundach albo milisekundach, w zależności od wyniku 
+---
+
+### `implementacja.cpp`
+
+Opis:
+> Plik źródłowy zawierający strukturę BigInt i algorytm mnożenia
+> wygenerowany przez AI
+
+---
+
+### `implementacja_wersja_big_endian.cpp`
+
+Opis:
+> Druga wersja naszej implementacji, nieużywana w eksperymencie,
+> korzystająca z formatu big endian
 
 ---
 
@@ -80,48 +143,30 @@ g++ main_GMP.cpp -o program -lgmp
 
 ---
 
-### `analysis.py`
+### 🐍 `main_PYTHON.py`
 
 Opis:
 
-> Pobiera dane z plików .csv, rysuje wykresy, dopasowuje regresję nieliniową
+> Mierzy czas wykonania mnożenia przez wbudowany typ Python'a
 
-* Odczytanie plików .csv
-* Wyrównanie jednostek
-* Odrzucenie wartości odstających (reguła 3 sigma)
-* Obliczenie średnich czasów i odchyleń standardowych
-* Rysowanie wykresów
-* Dopasowanie regresjii nieliniowej, model to:
-   $$t = a \cdot x^n$$
+* Pomiary przeprowadzone są dla każdej z długości w zmiennej sizes
+* Zapisuje wyniki do pliku 📊**resultsPYTHON.csv** w formacie: SIZE, time, unit
+* time może być podany w nanosekundach, mikrosekundach albo milisekundach, w zależności od wyniku 
 
-  ---
-
-  ### CMakeLists.txt
-
-> Plik konfiguracyjny
-  
-* W katalogu roboczym należy utworzyć folder *build* i do niego przejść:
-```bash
-mkdir build
-cd build
-```
-* Następnie należy wykonać polecenia:
-```bash
-cmake -G "MinGW Makefiles" ..
-cmake --build . --target run_all
-```
 ---
-### requirements.txt
 
-> Lista potrzebnych modułów pythona wykorzystanych w projekcie
+### `requirements.txt`
 
-### 'EXTRA_data_gen.py'
+Opis:
 
-> Skrypt pomocniczy do wygenrowania danych do dodatkowego celu 1.
+> Lista potrzebnych modułów dla Pythona
 
-* Importuje funkcję Generate_Random_Number z skryptu data_gen.py
-* Dane zostaję zapisane w pliku o nazwie: 'EXTRA_data.txt'
+---
 
-### 'EXTRAresultsGMP.csv'
+### `resultsXXX.csv`
 
-> Wyniki czasowe mnożenia liczby z EXTRA_data.txt za pomocą GMP
+Opis:
+
+> Wyniki czasowe dla danej biblioteki
+
+
