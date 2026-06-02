@@ -1,6 +1,6 @@
 # 💾 Implementacja algorytmu mnożenia Toom-Cook'a (Toom-3) dla liczb całkowitych dowolnej precyzji w C++. Zaprojektowanie i przeprowadzenie eksperymentu mającego na celu porównanie utworzonej implementacji z istniejącymi bibliotekami: GMP i wbudowaną biblioteką w Python. 
 
-# UWAGA: Projekt w trakcie realizacji! 🚧 🏗️ 🚧
+# ✅ Projekt skończony
 
 ---
 
